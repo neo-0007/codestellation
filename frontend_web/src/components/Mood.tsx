@@ -36,8 +36,8 @@ const Mood = () => {
       <div className="absolute top-0 left-0 w-32 h-32 bg-indigo-400 rounded-br-full opacity-50"></div>
 
       {/* Mood Content */}
-      <h2 className="text-xl font-bold relative">Hi, {name}</h2>
-      <p className="text-2xl relative">{mood}</p>
+      <h2 className="text-xl font-bold relative text-white">Hi, {name}</h2>
+      <p className="text-2xl relative text-white">{mood}</p>
     </div>
   );
 };

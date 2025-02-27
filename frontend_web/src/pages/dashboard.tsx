@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import FourBoxes from '../components/Boxes';
 import TwoBoxes from '../components/TwoBoxes';
+import AnalysisTwoBoxes from '../components/Analysis';
 import Mood from '../components/Mood';
 
 const Dashboard = () => {
@@ -15,6 +16,7 @@ const Dashboard = () => {
         <Sidebar isOpen={sidebarOpen} />
         <div className="flex-1 p-4">
           <Mood />
+          <AnalysisTwoBoxes />
           <TwoBoxes />
           <FourBoxes />
         </div>

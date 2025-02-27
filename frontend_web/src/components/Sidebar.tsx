@@ -6,17 +6,17 @@ const Sidebar = ({ onSelectGroup }) => {
   const [groups, setGroups] = useState([]);
 
   // Fetch groups from the backend
-  useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/get-groups");
-        const data = await response.json();
-        setGroups(data.map(group => group.group_name)); // Extracting only group names
-      } catch (error) {
-        console.error("Error fetching groups:", error);
-      }
-    };
+  const fetchGroups = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/get-groups");
+      const data = await response.json();
+      setGroups(data.map((group) => group.group_name)); // Extracting only group names
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchGroups();
   }, []);
 
@@ -29,7 +29,7 @@ const Sidebar = ({ onSelectGroup }) => {
       });
 
       if (response.ok) {
-        setGroups([...groups, newGroup]); // Update UI with new group
+        fetchGroups(); // Refresh the group list
       } else {
         console.error("Failed to create group");
       }
@@ -40,10 +40,10 @@ const Sidebar = ({ onSelectGroup }) => {
 
   return (
     <>
-      <aside className="text-gray-800 w-64 min-h-screen p-4">
+      <aside className="text-gray-800 w-64 min-h-screen p-4 m-2">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="py-2 px-4 w-full bg-white"
+          className="py-2 px-4 w-full bg-purple-400 rounded text-white font-bold"
         >
           + Add Group
         </button>
@@ -52,7 +52,7 @@ const Sidebar = ({ onSelectGroup }) => {
           {groups.map((group, index) => (
             <li
               key={index}
-              onClick={() => onSelectGroup(group)}
+              onClick={() => onSelectGroup?.(group)} // Ensure function exists before calling
               className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer"
             >
               {group}

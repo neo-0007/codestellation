@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import TherapyModal from "./Modals/TherapyModal";
 
-const Box = ({ color, lightColor, title, content, onClick }) => {
+const Box = ({ bgColor, lightBgColor, title, content, onClick }) => {
   return (
     <div
-      className={`relative w-108 h-52 bg-${color}-500 flex flex-col items-center justify-center text-white text-lg font-semibold rounded-lg shadow-lg overflow-hidden p-6 cursor-pointer`}
+      className={`relative w-108 h-52 ${bgColor} flex flex-col items-center justify-center text-white text-lg font-semibold rounded-lg shadow-lg overflow-hidden p-6 cursor-pointer`}
       onClick={onClick}
     >
-      <div className={`absolute -top-16 -left-16 w-40 h-40 ${lightColor} rounded-full`} />
+      <div className={`absolute -top-16 -left-16 w-40 h-40 ${lightBgColor} rounded-full`} />
       <h3 className="relative z-10 text-xl font-bold">{title}</h3>
       <p className="relative z-10 text-sm text-center">{content}</p>
     </div>
@@ -33,12 +33,12 @@ const TwoBoxes = () => {
 
   return (
     <div className="flex justify-center items-center gap-6 p-8">
-      <Box color="purple" lightColor="bg-purple-300" title="Mood Analysis" content="AI-based mood tracking and insights." />
-      
+      <Box bgColor="bg-purple-500" lightBgColor="bg-purple-300" title="Mood Analysis" content="AI-based mood tracking and insights." />
+
       {/* Open Modal when clicking "Guided Therapy" */}
       <Box
-        color="orange"
-        lightColor="bg-orange-300"
+        bgColor="bg-orange-500"
+        lightBgColor="bg-orange-300"
         title="Guided Therapy"
         content="AI-based mental wellness sessions."
         onClick={() => setIsTherapyModalOpen(true)}
