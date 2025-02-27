@@ -12,7 +12,7 @@ const HOST = process.env.HOST || "localhost";
 
 process.on("uncaughtException", (err) => {
     console.error(`Error: ${err.message}`);
-    console.error("Shutting down the server due to Uncaught Exception");
+    console.error(`Shutting down the server due to Uncaught Exception`);
     process.exit(1);
 });
 
@@ -27,39 +27,20 @@ const start = () => {
     const server = http.createServer(app);
     const io = new Server(server, { cors: { origin: "*" } });
 
-    // Store chat history for each user
-    const userHistories = new Map();
-
     io.on("connection", (socket) => {
-        console.log("User connected:", socket.id);
-
-        // Initialize history for new user
-        userHistories.set(socket.id, []);
-
+        //console.log("User connected");
+        
         socket.on("sendMessage", async (message) => {
             try {
-                const userHistory = userHistories.get(socket.id) || [];
-
-                // Get chatbot response with history
-                const reply = await getChatbotResponse(message, userHistory);
-
-                // Update history
-                userHistory.push({ role: "user", text: message });
-                userHistory.push({ role: "bot", text: reply });
-
-                // Store updated history
-                userHistories.set(socket.id, userHistory);
-
-                // Send response back to user
-                io.to(socket.id).emit("receiveMessage", { text: reply, sender: "bot" });
+                const reply = await getChatbotResponse(message);
+                io.emit("receiveMessage", { text: reply, sender: "bot" });
             } catch (error) {
                 console.error("Error fetching chatbot response:", error);
             }
         });
 
         socket.on("disconnect", () => {
-            console.log("User disconnected:", socket.id);
-            userHistories.delete(socket.id); // Clear history on disconnect
+            //console.log("User disconnected");
         });
     });
 
@@ -69,7 +50,7 @@ const start = () => {
 
     process.on("unhandledRejection", (err) => {
         console.error(`Error: ${err.message}`);
-        console.error("Shutting down the server due to Unhandled Promise Rejection");
+        console.error(`Shutting down the server due to Unhandled Promise Rejection`);
 
         server.close(() => {
             process.exit(1);
