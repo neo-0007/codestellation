@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_client/core/theme/text_field_theme.dart';
+import 'package:flutter_client/ui/pages/home_page.dart';
 import 'package:flutter_client/ui/pages/login_page.dart';
 import 'package:flutter_client/ui/pages/register_page.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         inputDecorationTheme: CTextFormFieldTheme.lightTheme
       ),
       home: Scaffold(
-        body: RegisterPage(),
+        body: HomePage(),
       ),
     );
   }
