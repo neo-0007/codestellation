@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/ui/pages/login_page.dart';
+import 'package:flutter_client/ui/pages/register_page2.dart';
 import 'package:flutter_client/ui/widgets/auth_form_field.dart';
 import 'package:flutter_client/ui/widgets/blue_button.dart';
 
@@ -12,6 +14,7 @@ class RegisterPage extends StatelessWidget {
     TextEditingController phoneController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     TextEditingController confirmPasswordController = TextEditingController();
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -23,43 +26,71 @@ class RegisterPage extends StatelessWidget {
                 hintText: 'Name',
                 controller: nameController,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               CAuthFormField(
                 hintText: 'Email',
                 controller: emailController,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               CAuthFormField(
                 hintText: 'Phone',
                 controller: phoneController,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               CAuthFormField(
                 hintText: 'Password',
                 controller: passwordController,
                 obscureText: true,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               CAuthFormField(
                 hintText: 'Confirm Password',
                 controller: confirmPasswordController,
                 obscureText: true,
               ),
-              SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
               BlueButton(
                 text: 'Continue',
-                onPressed: () {},
-              )
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return RegisterPage2();
+                  }));
+                },
+              ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account?  ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return LoginPage();
+                          },
+                        ),
+                        (route) => true,
+                      );
+                    },
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

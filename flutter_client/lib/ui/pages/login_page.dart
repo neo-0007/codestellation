@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/ui/pages/register_page.dart';
 import 'package:flutter_client/ui/widgets/auth_form_field.dart';
 import 'package:flutter_client/ui/widgets/blue_button.dart';
 
@@ -26,8 +27,47 @@ class LoginPage extends StatelessWidget {
                 controller: passwordController,
                 obscureText: true,
               ),
+              SizedBox(
+                height: 20,
+              ),
+              BlueButton(
+                text: 'Login',
+                onPressed: () {},
+              ),
               SizedBox(height: 20,),
-              BlueButton(text: 'Login', onPressed: (){})
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an account?  ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return RegisterPage();
+                          },
+                        ),
+                        (route) => true,
+                      );
+                    },
+                    child: const Text(
+                      "Register",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
