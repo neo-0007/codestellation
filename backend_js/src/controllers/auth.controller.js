@@ -81,4 +81,13 @@ const login = async (req, res, next) => {
     }
 };
 
+const getUserDetails = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const user = await new User({}).findById(id)
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
 module.exports = { register, login }
