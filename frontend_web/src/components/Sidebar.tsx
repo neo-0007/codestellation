@@ -1,12 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GroupModal from "./Modals/GroupModal";
 
 const Sidebar = ({ onSelectGroup }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [groups, setGroups] = useState(["Happy People", "Trekking Group", "Sun Yoga"]); // Default groups
+  const [groups, setGroups] = useState([]);
 
-  const handleCreateGroup = (newGroup) => {
-    setGroups([...groups, newGroup]); // Add new group to list
+  // Fetch groups from the backend
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/get-groups");
+        const data = await response.json();
+        setGroups(data.map(group => group.group_name)); // Extracting only group names
+      } catch (error) {
+        console.error("Error fetching groups:", error);
+      }
+    };
+
+    fetchGroups();
+  }, []);
+
+  const handleCreateGroup = async (newGroup) => {
+    try {
+      const response = await fetch("http://localhost:3000/create-group", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ groupName: newGroup }),
+      });
+
+      if (response.ok) {
+        setGroups([...groups, newGroup]); // Update UI with new group
+      } else {
+        console.error("Failed to create group");
+      }
+    } catch (error) {
+      console.error("Error creating group:", error);
+    }
   };
 
   return (
@@ -14,7 +43,7 @@ const Sidebar = ({ onSelectGroup }) => {
       <aside className="text-gray-800 w-64 min-h-screen p-4">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="py-2 px-4 w-full bg-white "
+          className="py-2 px-4 w-full bg-white"
         >
           + Add Group
         </button>
