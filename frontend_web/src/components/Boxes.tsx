@@ -17,7 +17,7 @@ const Box = ({ color, lightColor, title, content }) => {
 
 const FourBoxes = () => {
   return (
-    <div className="flex justify-center items-center gap-6 p-8">
+    <div className="flex justify-center items-center gap-6 p-2">
       <Box color="red" lightColor="bg-red-300" title="" content="Personalised Playlist." />
       <Box color="blue" lightColor="bg-blue-300" title="" content="Yoga Lessons." />
       <Box color="green" lightColor="bg-green-300" title="" content="Sleep Sounds." />

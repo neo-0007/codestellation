@@ -1,11 +1,11 @@
 const BaseModel = require("./base.model");
 
-class User extends BaseModel {
-    constructor({ name, email, phone, gender, dob, password }) {
-        super('groups'); // Pass the table name to the BaseModel
-        this.groupName = groupName;
-        this.groupID = groupID;
+class Group extends BaseModel {
+    constructor({ groupName }) {
+        super('chat_groups'); // Pass the table name to the BaseModel
+        this.group_name = groupName;
+        this.group_id = `groupName_${Math.floor(Math.random() * 99999)}`;
     }
 }
 
-module.exports = User;
+module.exports = Group;

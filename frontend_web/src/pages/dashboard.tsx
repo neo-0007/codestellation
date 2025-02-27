@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import FourBoxes from '../components/Boxes';
+import TwoBoxes from '../components/TwoBoxes';
 import Mood from '../components/Mood';
 
 const Dashboard = () => {
@@ -14,6 +15,7 @@ const Dashboard = () => {
         <Sidebar isOpen={sidebarOpen} />
         <div className="flex-1 p-4">
           <Mood />
+          <TwoBoxes />
           <FourBoxes />
         </div>
       </div>
