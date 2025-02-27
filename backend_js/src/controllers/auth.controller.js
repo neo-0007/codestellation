@@ -2,7 +2,6 @@ const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const User = require("../models/user.model");
 // const { generateTokens, storeRefreshToken } = require("../utils/jwtToken");
-// const UserInstituteDepartment = require("../models/user.institute.department.model");
 dotenv.config();
 
 const register = async (req, res, next) => {
