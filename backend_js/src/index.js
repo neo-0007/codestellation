@@ -4,16 +4,8 @@ const app = require("./app.js");
 const http = require("http");
 const { Server } = require("socket.io");
 const { getChatbotResponse } = require("./utils/chatbot");
-const { analyzeMood } = require("./utils/moodAnalyzer"); // Import mood analysis function
 const { connectMongoDB } = require("./config/mongodb.js");
-
-process.on("uncaughtException", (err) => {
-    console.error(`Error: ${err.message}`);
-    console.error(`Shutting down the server due to Uncaught Exception`);
-    process.exit(1);
-});
-
-
+const { analyzeMood } = require("./utils/moodAnalyzer"); // Import mood analysis function
 const Group = require("./models/groups.model.js");
 const mysql = require("mysql2/promise");
 const config = require("./config/mysqlConfig");
@@ -75,9 +67,6 @@ app.post("/create-group", async (req, res) => {
     }
 });
 
-const start = () => {
-    connectDB();
-    connectMongoDB()
 // Create a MySQL connection pool for direct queries
 let pool;
 
@@ -150,6 +139,5 @@ process.on("unhandledRejection", (err) => {
     console.error(`Error: ${err.message}`);
     process.exit(1);
 });
-}
 
 start();
