@@ -52,9 +52,8 @@ const Chatroom = () => {
     <>
       <Navbar />
       <div className="flex">
-        <Sidebar />
+        <Sidebar onSelectGroup={(group) => console.log("Selected group:", group)} />
         <div className="flex-1 flex flex-col p-6 ml-6"> 
-
           <div className="flex flex-col flex-1 bg-white p-4 rounded-lg shadow-md h-96 overflow-y-auto">
             {messages.length === 0 ? (
               <p className="text-gray-500 text-center">Text in {groupName}</p>
@@ -74,7 +73,6 @@ const Chatroom = () => {
               ))
             )}
           </div>
-
           <div className="mt-4 flex">
             <input
               type="text"
