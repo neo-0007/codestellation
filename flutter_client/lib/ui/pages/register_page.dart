@@ -56,7 +56,10 @@ class RegisterPage extends StatelessWidget {
               SizedBox(
                 height: 25,
               ),
-              BlueButton(text: 'Continue', onPressed: (){})
+              BlueButton(
+                text: 'Continue',
+                onPressed: () {},
+              )
             ],
           ),
         ),
