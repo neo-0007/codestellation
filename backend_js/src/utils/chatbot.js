@@ -54,8 +54,6 @@ async function getChatbotResponse(message) {
 
         chatHistory.push(message);
 
-        console.log(chatHistory);
-
         // Get response from AI
         const result = await chat.sendMessage(message);
 

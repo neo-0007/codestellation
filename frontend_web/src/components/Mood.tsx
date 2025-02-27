@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from 'react';
 
 const Mood = () => {
-  const [mood, setMood] = useState("Neutral");
+  const [mood, setMood] = useState(localStorage.getItem("mood") || "Neutral");
 
   useEffect(() => {
-    // Example logic to change mood (you can replace this with actual logic)
-    const moods = ["Happy", "Sad", "Excited", "Tired", "Neutral"];
-    const randomMood = moods[Math.floor(Math.random() * moods.length)];
-    setMood(randomMood);
+    const fetchMood = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/get-mood');
+        const data = await res.json();
+
+        if (res.ok) {
+          setMood(data.mood);
+          localStorage.setItem("mood", data.mood); // ✅ Store in localStorage
+        } else {
+          console.log("API request failed");
+        }
+      } catch (err) {
+        console.error("Error fetching mood:", err.message);
+      }
+    };
+
+    fetchMood(); // Call fetchMood on mount
   }, []);
 
   return (
