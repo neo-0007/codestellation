@@ -7,7 +7,6 @@ class User extends BaseModel{
         this.email = email;
         this.phone = phone;
         this.password = password;
-        this.username = username;
         this.gender = gender;
         this.dob = dob;
     }
