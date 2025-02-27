@@ -10,11 +10,13 @@ if (!API_KEY) {
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-// Predefined responses
+const chatHistory = [];
+
+// Predefined responses for common messages
 const responses = {
     name: "I am your AI assistant! How can I assist you today?",
     greeting: "Hello! How can I help you?",
-    small_talk: "I'm just a chatbot, but I'm always here to chat!",
+    small_talk: "I'm your AI assistant, but I'm always here to chat!",
     thanks: "You're very welcome! Let me know if you need anything else.",
     goodbye: "Goodbye! Have a great day! 😊"
 };
@@ -28,30 +30,34 @@ const message_categories = {
     goodbye: ["bye", "goodbye", "see you later", "take care", "see you soon"]
 };
 
-async function getChatbotResponse(userMessage, userHistory) {
+async function getChatbotResponse(message) {
     try {
         const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-pro-002" });
 
-        // Normalize input
-        const normalizedMessage = userMessage.trim().toLowerCase();
+        // Normalize input (trim spaces and make lowercase)
+        const normalizedMessage = message.trim().toLowerCase();
 
-        // Check for predefined responses
+        // Check predefined responses
         for (const category in message_categories) {
             if (message_categories[category].includes(normalizedMessage)) {
                 return responses[category];
             }
         }
 
-        // Use the user's chat history
+        // Initialize chat with empty history
         const chat = model.startChat({
-            history: userHistory, // Maintain user-specific history
+            history: [], // Can be extended to maintain past conversation
             generationConfig: {
-                maxOutputTokens: 200,
+                maxOutputTokens: 200, // Adjust response length
             },
         });
 
+        chatHistory.push(message);
+
+        console.log(chatHistory);
+
         // Get response from AI
-        const result = await chat.sendMessage(userMessage);
+        const result = await chat.sendMessage(message);
 
         if (result && result.response && result.response.text) {
             return result.response.text();
