@@ -3,7 +3,7 @@ const connectDB = require("./config/mysqlDb");
 const app = require("./app.js");
 const http = require("http");
 const { Server } = require("socket.io");
-const getChatbotResponse = require("./utils/chatbot");
+const { getChatbotResponse } = require("./utils/chatbot");
 
 dotenv.config();
 
