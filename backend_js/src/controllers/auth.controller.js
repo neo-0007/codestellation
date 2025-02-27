@@ -84,10 +84,19 @@ const login = async (req, res, next) => {
 const getUserDetails = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const user = await new User({}).findById(id)
+        const doesUserExist = await new User({}).findById(id)
+
+        if (doesUserExist.length === 0) {
+            return res.status(400).json({ success: false, message: `User not found.` });
+        }
+        
+        const user = doesUserExist[0];
+        const { password, ...userWithoutPassword } = user;
+
+        res.status(200).json({ success: true, user });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
 }
 
-module.exports = { register, login }
+module.exports = { register, login, getUserDetails };
