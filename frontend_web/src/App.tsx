@@ -4,6 +4,7 @@ import Dashboard from "./pages/dashboard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Chatbot from './pages/Chatbot';
+import Login from './pages/Login'
 // import Loader from "./components/Loader";
 
 function App() {
