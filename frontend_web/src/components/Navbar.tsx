@@ -1,8 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 
 export default function Navbar({ toggleSidebar }) {
+  const [name, setName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   
+  useEffect(() =>{
+    const fetchName = () =>{
+      const storedName = localStorage.getItem('name');
+      setName(storedName);
+    }
+
+    fetchName();
+  }, [])
+
   return (
     <nav className="bg-blue-600 text-white p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
@@ -13,7 +24,7 @@ export default function Navbar({ toggleSidebar }) {
           >
             ☰
           </button>
-          <a href="#" className="text-xl font-bold">Guest</a>
+          <a href="#" className="text-xl font-bold">{ name }</a>
         </div>
         
         <button
@@ -30,7 +41,7 @@ export default function Navbar({ toggleSidebar }) {
         >
           <li><a href="/" className="block py-2 px-4 hover:bg-blue-700 rounded">Home</a></li>
           <li><a href="/chatbot" className="block py-2 px-4 hover:bg-blue-700 rounded">Chatbot</a></li>
-          <li><a href="#" className="block py-2 px-4 hover:bg-blue-700 rounded">Contact</a></li>
+          <li><a href="/user/login" className="block py-2 px-4 hover:bg-blue-700 rounded">Log Out</a></li>
         </ul>
       </div>
     </nav>

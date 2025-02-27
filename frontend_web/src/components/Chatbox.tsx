@@ -1,21 +1,39 @@
+import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 
-import { useState } from "react";
+const socket = io("http://localhost:3000");
 
 export default function Chatbox() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
   const [input, setInput] = useState("");
+
+  useEffect(() => {
+    const receiveMessageHandler = (message: { text: string; sender: string; }) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    };
+  
+    socket.on("receiveMessage", receiveMessageHandler);
+    
+    return () => {
+      socket.off("receiveMessage", receiveMessageHandler);
+    };
+  }, []);
 
   const sendMessage = () => {
     if (input.trim() !== "") {
-      setMessages([...messages, { text: input, sender: "user" }]);
+      const userMessage = { text: input, sender: "user" };
+      setMessages([...messages, userMessage]);
+      socket.emit("sendMessage", input);
       setInput("");
     }
   };
 
   return (
     <div className="fixed bottom-0 left-0 w-full flex flex-col h-[80vh] bg-white shadow-lg">
-
       <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-gray-50">
+        <div className='p-3 rounded-lg max-w-xs bg-gray-100 text-left self-start'>
+          <p className='text-sm'>Hi! How are you feeling today?</p>
+        </div>
         {messages.map((msg, index) => (
           <div
             key={index}

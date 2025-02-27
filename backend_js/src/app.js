@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const authRouter = require("./routes/auth.route.js");
 const moodRouter = require("./routes/mood.route.js");
+const storeRouter = require("./routes/store.route.js")
 
 dotenv.config();
 const app = express();
@@ -34,6 +35,7 @@ app.use(express.urlencoded({extended:false}));
 
 app.use("/api/auth", authRouter);
 app.use("/api/mood", moodRouter);
+app.use("/api/store", storeRouter);
 
 module.exports = app;
 
