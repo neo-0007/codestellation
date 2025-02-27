@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useEffect, useState } from "react";
 import Dashboard from "./pages/dashboard";
 import Register from "./pages/Register";
+import Chatbot from './pages/Chatbot';
 // import Loader from "./components/Loader";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/user/register" element={<Register />} />
+          <Route path="/chatbot" element={<Chatbot />} />
         </Routes>
       </Router>
     </>
