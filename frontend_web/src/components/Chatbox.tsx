@@ -1,20 +1,31 @@
+import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 
-import { useState } from "react";
+const socket = io("http://localhost:3000");
 
 export default function Chatbox() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
+  useEffect(() => {
+    socket.on("receiveMessage", (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+    
+    return () => socket.off("receiveMessage");
+  }, []);
+
   const sendMessage = () => {
     if (input.trim() !== "") {
-      setMessages([...messages, { text: input, sender: "user" }]);
+      const userMessage = { text: input, sender: "user" };
+      setMessages([...messages, userMessage]);
+      socket.emit("sendMessage", input);
       setInput("");
     }
   };
 
   return (
     <div className="fixed bottom-0 left-0 w-full flex flex-col h-[80vh] bg-white shadow-lg">
-
       <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-gray-50">
         {messages.map((msg, index) => (
           <div
