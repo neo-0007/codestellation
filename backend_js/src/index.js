@@ -49,6 +49,31 @@ app.get("/get-mood", async (req, res) => {
 });
 
 
+app.post('/create-group', async (req, res) => {
+  const { groupName } = req.body;
+
+  if (!groupName.trim()) {
+    return res.status(400).json({ message: "Group name is required." });
+  }
+
+  try {
+    const query = "INSERT INTO chat_group (group_name) VALUES (?)";
+    const values = [groupName];
+
+    const [result] = await db.execute(query, values);
+    
+    res.status(201).json({ 
+      message: "Group created successfully!", 
+      groupId: result.insertId 
+    });
+
+  } catch (err) {
+    console.error("Error creating group:", err);
+    res.status(500).json({ message: "Failed to create group." });
+  }
+});
+
+
 const start = () => {
     connectDB();
 

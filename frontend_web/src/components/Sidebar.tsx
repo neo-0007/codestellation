@@ -1,30 +1,44 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import GroupModal from "./Modals/GroupModal";
 
-const Sidebar = () => {
-  const navigate = useNavigate();
+const Sidebar = ({ onSelectGroup }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [groups, setGroups] = useState(["Happy People", "Trekking Group", "Sun Yoga"]); // Default groups
 
-  const handleGroupSelect = (groupName) => {
-    navigate(`/chatroom/${groupName}`);
+  const handleCreateGroup = (newGroup) => {
+    setGroups([...groups, newGroup]); // Add new group to list
   };
 
   return (
-    <aside className="bg-white w-64 min-h-screen p-4 mt-5" style={{ color: '#12375c'}}>
-      <button className="py-2 px-4 hover:bg-gray-200 rounded flex justify-center w-full">
-        + Add Group
-      </button>
-      <ul>
-        <li onClick={() => handleGroupSelect("Happy People")} className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer">
-          Happy People
-        </li>
-        <li onClick={() => handleGroupSelect("Trekking Group")} className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer">
-          Trekking Group
-        </li>
-        <li onClick={() => handleGroupSelect("Sun Yoga")} className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer">
-          Sun Yoga
-        </li>
-      </ul>
-    </aside>
+    <>
+      <aside className="text-gray-800 w-64 min-h-screen p-4">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="py-2 px-4 w-full bg-white "
+        >
+          + Add Group
+        </button>
+
+        <ul className="mt-4">
+          {groups.map((group, index) => (
+            <li
+              key={index}
+              onClick={() => onSelectGroup(group)}
+              className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer"
+            >
+              {group}
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      {/* Modal Component */}
+      <GroupModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreateGroup={handleCreateGroup}
+      />
+    </>
   );
 };
 
