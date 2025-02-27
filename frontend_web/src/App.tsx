@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Dashboard from "./pages/dashboard";
 import Register from "./pages/Register";
 import Chatbot from './pages/Chatbot';
+import Login from './pages/Login'
 // import Loader from "./components/Loader";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/user/register" element={<Register />} />
+          <Route path="/user/login" element={<Login />} />
           <Route path="/chatbot" element={<Chatbot />} />
         </Routes>
       </Router>
