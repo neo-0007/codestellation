@@ -110,6 +110,9 @@ const Register = () => {
               required
               className="w-full p-2 border rounded"
             />
+            <div>
+              <p>Already have an Account? <a href="/user/login" className="text-blue-500">Sign In</a></p>
+            </div>
             <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition" onClick={handleSubmit}>
               Sign Up
             </button>
