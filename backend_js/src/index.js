@@ -81,6 +81,8 @@ const start = () => {
                 // Emit message to frontend
                 io.emit("receiveMessage", { text: reply, sender: "bot" });
 
+                console.log(chatHistory); // console log kori disu
+
             } catch (error) {
                 console.error("Error fetching chatbot response:", error);
             }
