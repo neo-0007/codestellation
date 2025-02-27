@@ -4,15 +4,18 @@ const app = require("./app.js");
 const http = require("http");
 const { Server } = require("socket.io");
 const { getChatbotResponse } = require("./utils/chatbot");
+const { analyzeMood } = require("./utils/moodAnalyzer"); // Import mood analysis function
 
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "localhost";
 
+// Store chat history (resets when user disconnects)
+const chatHistory = [];
+
 process.on("uncaughtException", (err) => {
     console.error(`Error: ${err.message}`);
-    console.error(`Shutting down the server due to Uncaught Exception`);
     process.exit(1);
 });
 
@@ -21,6 +24,31 @@ app.get("/", (req, res) => {
     res.status(200).json({ success: true, message: "Welcome to Pyro Hackathon!" });
 });
 
+const moodStorage = { mood: "neutral" }; // Store the last analyzed mood
+
+app.get("/get-mood", async (req, res) => {
+    try {
+        // If chat history is empty, return the stored mood
+        if (chatHistory.length === 0) {
+            return res.status(200).json({ mood: moodStorage.mood, message: "No new chat history yet." });
+        }
+
+        // Analyze mood from chat history
+        const mood = await analyzeMood(chatHistory.map(msg => msg.text));
+
+        // Store analyzed mood in memory
+        moodStorage.mood = mood;
+
+        console.log("Analyzed Mood:", mood);
+
+        res.status(200).json({ mood });
+    } catch (error) {
+        console.error("Error getting mood:", error);
+        res.status(500).json({ error: "Failed to analyze mood." });
+    }
+});
+
+
 const start = () => {
     connectDB();
 
@@ -28,19 +56,30 @@ const start = () => {
     const io = new Server(server, { cors: { origin: "*" } });
 
     io.on("connection", (socket) => {
-        //console.log("User connected");
-        
+        console.log("User connected");
+
         socket.on("sendMessage", async (message) => {
             try {
+                // Store user message
+                chatHistory.push({ role: "user", text: message });
+
+                // Get bot response
                 const reply = await getChatbotResponse(message);
+
+                // Store bot response
+                chatHistory.push({ role: "bot", text: reply });
+
+                // Emit message to frontend
                 io.emit("receiveMessage", { text: reply, sender: "bot" });
+
             } catch (error) {
                 console.error("Error fetching chatbot response:", error);
             }
         });
 
         socket.on("disconnect", () => {
-            //console.log("User disconnected");
+            console.log("User disconnected");
+            chatHistory.length = 0; // Clear chat history when user leaves
         });
     });
 
@@ -50,11 +89,7 @@ const start = () => {
 
     process.on("unhandledRejection", (err) => {
         console.error(`Error: ${err.message}`);
-        console.error(`Shutting down the server due to Unhandled Promise Rejection`);
-
-        server.close(() => {
-            process.exit(1);
-        });
+        process.exit(1);
     });
 };
 
