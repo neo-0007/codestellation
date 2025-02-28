@@ -16,7 +16,7 @@ const History: React.FC = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/store/user/data/${localStorage.getItem("id")}`);
+        const response = await fetch(`http://localhost:3000/api/store/user/data/${localStorage.getItem("id")}`);
         const data = await response.json();
   
         if (!data.success) {
