@@ -1,7 +1,7 @@
 const BaseModel = require("./base.model");
 
 class User extends BaseModel {
-    constructor({ name, email, phone, gender, dob, password , mood, stressLevel}) {
+    constructor({ name, email, phone, gender, dob, password}) {
         super('users'); // Pass the table name to the BaseModel
         this.name = name;
         this.email = email;
@@ -9,8 +9,6 @@ class User extends BaseModel {
         this.password = password;
         this.gender = gender;
         this.dob = dob;
-        this.mood=mood;
-        this.stressLevel=stressLevel;
         // Removed the username property as it's not in the constructor parameters
     }
 
