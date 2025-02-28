@@ -36,7 +36,7 @@ const Mood = () => {
 
       {/* Mood Content */}
       <h2 className="text-xl font-bold relative text-white">Hi, {name}</h2>
-      <p className="text-2xl relative text-white">{mood}</p>
+      <p className="text-base relative text-white mt-2">You're currently feeling: <span className="font-bold">{mood}</span></p>
     </div>
   );
 };
