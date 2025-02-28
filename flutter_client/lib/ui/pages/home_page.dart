@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              (moodProvider.mood == MoodType.none)
+              (moodProvider.mood == null)
                   ? ImageCarousel(
                       imagePaths: [
                         'assets/amazed.jpg',
@@ -138,11 +138,12 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(
                               builder: (context) {
                                 return VoiceChatPage(
-                                  onMoodAnalyzed: (MoodType mood,int stressLevel) {
-                                    print("🔹 Received mood: ${mood.name}, 🔹 Received stress level: $stressLevel");
+                                  onMoodAnalyzed:
+                                      (MoodType mood, int stressLevel) {
+                                    print(
+                                        "🔹 Received mood: ${mood.name}, 🔹 Received mood: ${mood.name}");
                                     moodProvider.updateMood(mood);
-
-
+                                    // Handle mood update here (e.g., send to a provider, store in DB)
                                   },
                                 );
                               },

@@ -21,92 +21,81 @@ class _VoiceChatPageState extends State<VoiceChatPage> {
   String text = "Press the button and start speaking...";
   String fullSpeech = "";
   List<Map<String, String>> chatHistory = [];
-  late String apiKey;
+
 
   @override
   void initState() {
     super.initState();
     _speechToText = stt.SpeechToText();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        apiKey = Provider.of<ApiKeyProvider>(context, listen: false).geminiKey;
-      });
-    });
   }
 
-  @override
-  void dispose() {
-    _speechToText.stop();
-    _speechToText.cancel();
+ @override
+void dispose() {
+  _analyzeMood().then((result) {
+    widget.onMoodAnalyzed?.call(result.$1, result.$2); // Send mood and stress level back
+  });
 
-    if (chatHistory.isNotEmpty) {
-      _analyzeMood().then((result) {
-        if (mounted) {
-          widget.onMoodAnalyzed?.call(result.$1, result.$2);
-        }
-      });
-    }
-    super.dispose();
+  super.dispose();
+}
+
+
+ Future<(MoodType, int)> _analyzeMood() async {
+  if (chatHistory.isEmpty || !mounted) {
+    print("❌ Skipping mood analysis: Chat history empty or widget unmounted.");
+    return (MoodType.numb, 0);
   }
-  Future<(MoodType, int)> _analyzeMood() async {
-    if (chatHistory.isEmpty || !mounted) {
-      print(
-          "❌ Skipping mood analysis: Chat history empty or widget unmounted.");
-      return (MoodType.numb, 0);
-    }
 
-    print("📢 Analyzing mood... Sending chat history to Gemini API");
+  print("📢 Analyzing mood... Sending chat history to Gemini API");
 
-    try {
-      final model = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
+  try {
+    final apiKey = Provider.of<ApiKeyProvider>(context, listen: false).geminiKey;
+    final model = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
 
-      String conversation = chatHistory.map((message) {
-        return message.containsKey("user")
-            ? "User: ${message["user"]}"
-            : "Bot: ${message["bot"]}";
-      }).join("\n");
+    String conversation = chatHistory.map((message) {
+      return message.containsKey("user")
+          ? "User: ${message["user"]}"
+          : "Bot: ${message["bot"]}";
+    }).join("\n");
 
-      final response = await model.generateContent([
-        Content.text(
-            "Analyze the following conversation and determine the user's mood. "
-            "Return only one of these moods: happy, sad, amazed, angry, disappointed, love, numb, shy, sleepy, tired. "
-            "If unsure, return 'numb'.\n\n"
-            "Also, provide an estimated stress level as a percentage (0-100%). "
-            "Example output: 'Mood: sad, Stress: 80%' \n\n$conversation")
-      ]);
+    final response = await model.generateContent([
+      Content.text(
+          "Analyze the following conversation and determine the user's mood. "
+          "Return only one of these moods: happy, sad, amazed, angry, disappointed, love, numb, shy, sleepy, tired. "
+          "If unsure, return 'numb'.\n\n"
+          "Also, provide an estimated stress level as a percentage (0-100%). "
+          "Example output: 'Mood: sad, Stress: 80%' \n\n$conversation")
+    ]);
 
-      print("📩 API Response: ${response.text}");
+    print("📩 API Response: ${response.text}");
 
-      String moodResponse =
-          response.text?.toLowerCase() ?? "mood: numb, stress: 0%";
+    String moodResponse = response.text?.toLowerCase() ?? "mood: numb, stress: 0%";
 
-      // Extract Mood
-      MoodType detectedMood = MoodType.numb;
-      for (var mood in MoodType.values) {
-        if (moodResponse.contains(mood.toString().split('.').last)) {
-          detectedMood = mood;
-          break;
-        }
+    // Extract Mood
+    MoodType detectedMood = MoodType.numb;
+    for (var mood in MoodType.values) {
+      if (moodResponse.contains(mood.toString().split('.').last)) {
+        detectedMood = mood;
+        break;
       }
-
-      // Extract Stress Percentage
-      RegExp stressRegex = RegExp(r"stress:\s*(\d+)%", caseSensitive: false);
-      int stressLevel = 0;
-      Match? match = stressRegex.firstMatch(moodResponse);
-      if (match != null) {
-        stressLevel = int.parse(match.group(1)!);
-      }
-
-      print(
-          "\n✅ Mood Analyzed: ${detectedMood.name.toUpperCase()}, Stress: $stressLevel%");
-
-      return (detectedMood, stressLevel);
-    } catch (e) {
-      print("\n❌ Error analyzing mood: $e\n");
-      return (MoodType.numb, 0);
     }
+
+    // Extract Stress Percentage
+    RegExp stressRegex = RegExp(r"stress:\s*(\d+)%", caseSensitive: false);
+    int stressLevel = 0;
+    Match? match = stressRegex.firstMatch(moodResponse);
+    if (match != null) {
+      stressLevel = int.parse(match.group(1)!);
+    }
+
+    print("\n✅ Mood Analyzed: ${detectedMood.name.toUpperCase()}, Stress: $stressLevel%");
+
+    return (detectedMood, stressLevel);
+  } catch (e) {
+    print("\n❌ Error analyzing mood: $e\n");
+    return (MoodType.numb, 0);
   }
+}
+
 
   void _toggleRecording() async {
     if (isSpeaking) {
@@ -157,6 +146,7 @@ class _VoiceChatPageState extends State<VoiceChatPage> {
 
   Future<void> _sendToGemini(String userText) async {
     try {
+      final apiKey = Provider.of<ApiKeyProvider>(context, listen: false).geminiKey;
       final model = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
       final response = await model.generateContent([
         Content.text(
