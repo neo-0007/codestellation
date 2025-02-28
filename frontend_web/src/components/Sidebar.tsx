@@ -8,9 +8,10 @@ const Sidebar = ({ onSelectGroup }) => {
   // Fetch groups from the backend
   const fetchGroups = async () => {
     try {
-      const response = await fetch("http://localhost:3000/get-groups");
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/get-groups`);
       const data = await response.json();
-      setGroups(data.map((group) => group.group_name)); // Extracting only group names
+      setGroups(data.groups.map((group) => group.group_name)); // Extracting only group names
+      localStorage.setItem("groups", data.length)
     } catch (error) {
       console.error("Error fetching groups:", error);
     }
@@ -22,7 +23,7 @@ const Sidebar = ({ onSelectGroup }) => {
 
   const handleCreateGroup = async (newGroup) => {
     try {
-      const response = await fetch("http://localhost:3000/create-group", {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/create-group`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ groupName: newGroup }),

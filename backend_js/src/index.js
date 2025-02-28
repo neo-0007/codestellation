@@ -4,7 +4,7 @@ const app = require("./app.js");
 const http = require("http");
 const { Server } = require("socket.io");
 const { getChatbotResponse } = require("./utils/chatbot");
-//const { connectMongoDB } = require("./config/mongodb.js");
+const { connectMongoDB } = require("./config/mongodb.js");
 const { analyzeMood } = require("./utils/moodAnalyzer"); // Import mood analysis function
 const Group = require("./models/groups.model.js");
 const mysql = require("mysql2/promise");
@@ -74,7 +74,7 @@ app.get("/get-groups", async (req, res) => {
     try {
         // Use the pool to execute query
         const [groups] = await pool.query("SELECT group_name FROM chat_groups");
-        res.status(200).json(groups);
+        res.status(200).json({groups, length: groups.length});
     } catch (err) {
         console.error("Error fetching groups:", err);
         res.status(500).json({ message: "Failed to retrieve groups." });
@@ -85,6 +85,7 @@ const start = async () => {
     try {
         // Connect to database using the connectDB function
         await connectDB();
+        connectMongoDB()
         
         // Create a pool for direct queries
         pool = mysql.createPool(config);

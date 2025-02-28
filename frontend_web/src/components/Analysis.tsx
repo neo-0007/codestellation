@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const AnalysisBox = ({ bgColor, lightBgColor, title, content, children }) => {
   return (
@@ -47,8 +47,31 @@ const CircularProgress = ({ percentage }) => {
 };
 
 const AnalysisBoxes = () => {
-  const stressLevel = 65; // Stress level (0-100)
-  const socialStatus = "Active in 2 groups";
+  const [stressLevel, setStressPer] = useState(0)
+  const [noOfGroups, setNoOfGroups] = useState(parseInt(localStorage.getItem('groups') || '0'))
+  useEffect(() => {
+    const fetchStress = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/auth/user/${localStorage.getItem("id")}`);
+        const data = await res.json();
+
+        if (res.ok) {
+          setStressPer(data.user.stressLevel);
+          localStorage.setItem("stress", data.user.stressLevel); // ✅ Store in localStorage
+        } else {
+          console.log("API request failed");
+        }
+      } catch (err) {
+        console.error("Error fetching stress:", err.message);
+      }
+    };
+    const fetchNoOfGroups = async () =>{
+      setNoOfGroups(localStorage.getItem('groups'))
+    }
+    fetchStress()
+  }, []);
+  // const stressLevel = 65; // Stress level (0-100)
+  const socialStatus = `Active in ${noOfGroups} groups`;
 
   return (
     <div className="flex justify-center items-center gap-6 p-8">

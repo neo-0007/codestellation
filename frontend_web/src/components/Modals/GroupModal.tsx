@@ -13,7 +13,7 @@ const GroupModal = ({ isOpen, onClose, onCreateGroup }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/create-group", {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/create-group`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

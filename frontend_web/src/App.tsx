@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Chatbot from "./pages/Chatbot";
 import Login from "./pages/Login";
 import Chatroom from "./pages/Chatrooms";
+import History from "./components/History";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/user/login" element={<Login />} />
         <Route path="/chatbot" element={<Chatbot />} />
         <Route path="/chatroom/:groupName" element={<Chatroom />} />
+        <Route path="/history" element={<History />} />
       </Routes>
     </Router>
   );

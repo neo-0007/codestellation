@@ -10,11 +10,11 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,6 +28,7 @@ const Login = () => {
         console.log('Login successful:', data);
         navigate('/'); // Redirect to dashboard or any other page
         localStorage.setItem('name', data.user.name);
+        localStorage.setItem('id', data.user.id);
       } else {
         console.error('Login failed:', data);
       }

@@ -7,12 +7,11 @@ const Mood = () => {
   useEffect(() => {
     const fetchMood = async () => {
       try {
-        const res = await fetch('http://localhost:3000/get-mood');
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/auth/user/${localStorage.getItem("id")}`);
         const data = await res.json();
-
         if (res.ok) {
-          setMood(data.mood);
-          localStorage.setItem("mood", data.mood); // ✅ Store in localStorage
+          setMood(data.user.mood);
+          localStorage.setItem("mood", data.user.mood); // ✅ Store in localStorage
         } else {
           console.log("API request failed");
         }

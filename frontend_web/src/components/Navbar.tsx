@@ -35,6 +35,7 @@ export default function Navbar({ toggleSidebar }) {
         >
           <li><a href="/" className="block py-2 px-4">Home</a></li>
           <li><a href="/chatbot" className="block py-2 px-4 ">Chatbot</a></li>
+          <li><a href="/history" className="block py-2 px-4 ">Histoy</a></li>
           <li><a href="/user/login" className="block py-2 px-4">Log Out</a></li>
         </ul>
       </div>

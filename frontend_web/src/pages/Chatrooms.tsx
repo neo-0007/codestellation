@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
-const socket = io("http://localhost:3000"); // Update with your backend URL
+const socket = io(`${import.meta.env.VITE_BASE_URL}`); // Update with your backend URL
 
 const Chatroom = () => {
   const { groupName } = useParams(); // Get chatroom name from URL
