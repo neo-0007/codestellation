@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import for navigation
 import GroupModal from "./Modals/GroupModal";
 
 const Sidebar = ({ onSelectGroup }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groups, setGroups] = useState([]);
+  const navigate = useNavigate(); // Initialize navigate
 
   // Fetch groups from the backend
   const fetchGroups = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/get-groups`);
+      const response = await fetch(`http://localhost:3000/get-groups`);
       const data = await response.json();
       setGroups(data.groups.map((group) => group.group_name)); // Extracting only group names
-      localStorage.setItem("groups", data.length)
+      // Fixed: Don't set data.length to localStorage
     } catch (error) {
       console.error("Error fetching groups:", error);
     }
@@ -23,12 +25,11 @@ const Sidebar = ({ onSelectGroup }) => {
 
   const handleCreateGroup = async (newGroup) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/create-group`, {
+      const response = await fetch(`http://localhost:3000/create-group`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ groupName: newGroup }),
       });
-
       if (response.ok) {
         fetchGroups(); // Refresh the group list
       } else {
@@ -37,6 +38,15 @@ const Sidebar = ({ onSelectGroup }) => {
     } catch (error) {
       console.error("Error creating group:", error);
     }
+  };
+
+  // Handle group selection with navigation
+  const handleGroupSelect = (group) => {
+    if (onSelectGroup) {
+      onSelectGroup(group);
+    }
+    // Navigate to the group's chat room
+    navigate(`/chatroom/${group}`);
   };
 
   return (
@@ -48,12 +58,11 @@ const Sidebar = ({ onSelectGroup }) => {
         >
           + Add Group
         </button>
-
         <ul className="mt-4">
           {groups.map((group, index) => (
             <li
               key={index}
-              onClick={() => onSelectGroup?.(group)} // Ensure function exists before calling
+              onClick={() => handleGroupSelect(group)}
               className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer"
             >
               {group}
@@ -61,7 +70,6 @@ const Sidebar = ({ onSelectGroup }) => {
           ))}
         </ul>
       </aside>
-
       {/* Modal Component */}
       <GroupModal
         isOpen={isModalOpen}
