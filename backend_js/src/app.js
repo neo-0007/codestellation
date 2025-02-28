@@ -10,19 +10,27 @@ const storeRouter = require("./routes/store.route.js")
 dotenv.config();
 const app = express();
 
-const corsOptions = {
-    origin: (origin, callback) => {
-        const allowedOrigins = [
-            // `http://${process.env.HOST || 'localhost'}:5173`,
-            "*"
-        ];
+// const corsOptions = {
+//     origin: (origin, callback) => {
+//         const allowedOrigins = [
+//             // `http://${process.env.HOST || 'localhost'}:5173`,
+//             "*",
+//             "http://localhost:*"
+//         ];
 
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, origin);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, origin);
+//         } else {
+//             callback(new Error("Not allowed by CORS"));
+//         }
+//     },
+//     methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
+//     credentials: true,
+// };
+
+
+const corsOptions = {
+    origin: true, // This will allow all origins
     methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
     credentials: true,
 };
