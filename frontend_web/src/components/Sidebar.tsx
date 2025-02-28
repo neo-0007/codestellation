@@ -1,14 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import GroupModal from "./Modals/GroupModal";
 
-const Sidebar = ({ isOpen }) => {
+const Sidebar = ({ onSelectGroup }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [groups, setGroups] = useState([]);
+
+  // Fetch groups from the backend
+  const fetchGroups = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/get-groups`);
+      const data = await response.json();
+      setGroups(data.groups.map((group) => group.group_name)); // Extracting only group names
+      localStorage.setItem("groups", data.length)
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  const handleCreateGroup = async (newGroup) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/create-group`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ groupName: newGroup }),
+      });
+
+      if (response.ok) {
+        fetchGroups(); // Refresh the group list
+      } else {
+        console.error("Failed to create group");
+      }
+    } catch (error) {
+      console.error("Error creating group:", error);
+    }
+  };
+
   return (
-    <aside className={`bg-gray-800 text-white w-64 min-h-screen p-4 transition-all duration-300 ${isOpen ? '' : '-ml-64'}`}> 
-      <ul>
-        <li className="py-2 px-4 hover:bg-gray-700 rounded"><a href="#">Dashboard</a></li>
-        <li className="py-2 px-4 hover:bg-gray-700 rounded"><a href="#">Profile</a></li>
-        <li className="py-2 px-4 hover:bg-gray-700 rounded"><a href="#">Settings</a></li>
-      </ul>
-    </aside>
+    <>
+      <aside className="text-gray-800 w-64 min-h-screen p-4 m-2">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="py-2 px-4 w-full bg-purple-400 rounded text-white font-bold"
+        >
+          + Add Group
+        </button>
+
+        <ul className="mt-4">
+          {groups.map((group, index) => (
+            <li
+              key={index}
+              onClick={() => onSelectGroup?.(group)} // Ensure function exists before calling
+              className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer"
+            >
+              {group}
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      {/* Modal Component */}
+      <GroupModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreateGroup={handleCreateGroup}
+      />
+    </>
   );
 };
 

@@ -1,8 +1,10 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import Class from '../components/Class';
+import FourBoxes from '../components/Boxes';
+import TwoBoxes from '../components/TwoBoxes';
+import AnalysisTwoBoxes from '../components/Analysis';
+import Mood from '../components/Mood';
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -10,11 +12,14 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex">
         <Sidebar isOpen={sidebarOpen} />
-        <main className="flex-1 overflow-y-auto">
-          <Class />
-        </main>
+        <div className="flex-1 p-4">
+          <Mood />
+          <AnalysisTwoBoxes />
+          <TwoBoxes />
+          <FourBoxes />
+        </div>
       </div>
     </div>
   );
