@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_client/providers/mood_provider.dart';
+import 'package:flutter_client/ui/pages/meditation_page.dart';
 import 'package:flutter_client/ui/pages/quotes_page.dart';
 import 'package:flutter_client/ui/pages/relax_page.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,18 @@ class ExplorePage extends StatelessWidget {
           },
         ),
       );
-    } else {
+    }else if(items[index]["title"] == "Meditate"){
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return MeditationScreen(userMood: moodProvider.mood!,);
+          },
+        ),
+      );
+    } 
+    
+    else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("${items[index]["title"]} coming soon!")),
       );

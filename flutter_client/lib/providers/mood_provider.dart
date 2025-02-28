@@ -14,7 +14,7 @@ enum MoodType {
 }
 
 class MoodProvider extends ChangeNotifier {
-  MoodType? _mood;
+  MoodType? _mood = MoodType.angry;
 
   MoodType? get mood => _mood;
 
