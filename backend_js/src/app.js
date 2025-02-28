@@ -13,7 +13,8 @@ const app = express();
 const corsOptions = {
     origin: (origin, callback) => {
         const allowedOrigins = [
-            `http://${process.env.HOST || 'localhost'}:5173`,
+            // `http://${process.env.HOST || 'localhost'}:5173`,
+            "*"
         ];
 
         if (!origin || allowedOrigins.includes(origin)) {
