@@ -5,6 +5,7 @@ import FourBoxes from '../components/Boxes';
 import TwoBoxes from '../components/TwoBoxes';
 import AnalysisTwoBoxes from '../components/Analysis';
 import Mood from '../components/Mood';
+import UneasyBanner from '../components/Emergency'
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -19,6 +20,7 @@ const Dashboard = () => {
           <AnalysisTwoBoxes />
           <TwoBoxes />
           <FourBoxes />
+          <UneasyBanner />
         </div>
       </div>
     </div>

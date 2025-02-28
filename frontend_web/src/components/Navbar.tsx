@@ -18,7 +18,7 @@ export default function Navbar({ toggleSidebar }) {
     <nav className="bg-white p-4 shadow-md" style={{ color: '#12375c'}}>
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center"> 
-          <a href="#" className="text-xl font-bold">AI Health Assistant</a>
+          <a href="#" className="text-xl font-bold">Harmoni</a>
         </div>
         
         <button
