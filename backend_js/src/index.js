@@ -94,37 +94,72 @@ const start = async () => {
         const io = new Server(server, { cors: { origin: "*" } });
         
         io.on("connection", (socket) => {
-            console.log("User connected");
-            
-            socket.on("sendMessage", async (message) => {
-                try {
-                    // Store user message
-                    chatHistory.push({ role: "user", text: message });
-                    
-                    // Get bot response
-                    const reply = await getChatbotResponse(message);
-                    
-                    // Store bot response
-                    chatHistory.push({ role: "bot", text: reply });
-                    
-                    // Emit message to frontend
-                    io.emit("receiveMessage", { text: reply, sender: "bot" });
-                    console.log(chatHistory);
-                } catch (error) {
-                    console.error("Error fetching chatbot response:", error);
-                    // Send error message to client
-                    io.emit("receiveMessage", { 
-                        text: "Sorry, I couldn't process your message at this time.", 
-                        sender: "bot" 
-                    });
-                }
-            });
-            
-            socket.on("disconnect", () => {
-                console.log("User disconnected");
-                chatHistory.length = 0; // Clear chat history when user leaves
-            });
-        });
+  console.log("User connected");
+  
+  // Store the current room/group the socket is in
+  let currentRoom = null;
+  
+  // Handle joining a specific chat room
+  socket.on("joinRoom", (groupName) => {
+    // Leave previous room if any
+    if (currentRoom) {
+      socket.leave(currentRoom);
+      console.log(`User left room: ${currentRoom}`);
+    }
+    
+    // Join new room
+    socket.join(groupName);
+    currentRoom = groupName;
+    console.log(`User joined room: ${groupName}`);
+  });
+  
+  // Handle leaving a room
+  socket.on("leaveRoom", (groupName) => {
+    socket.leave(groupName);
+    currentRoom = null;
+    console.log(`User left room: ${groupName}`);
+  });
+  
+  // Handle messages in group chats
+  socket.on("sendMessage", (messageData) => {
+    if (messageData.group) {
+      // For group messages (from Chatroom.jsx)
+      console.log(`Group message to ${messageData.group}: ${messageData.text}`);
+      // Broadcast to all users in the group
+      io.to(messageData.group).emit("receiveMessage", messageData);
+    } else {
+      // For chatbot messages (from Chatbox.tsx)
+      handleChatbotMessage(socket, messageData);
+    }
+  });
+  
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
+
+// Function to handle chatbot messages
+async function handleChatbotMessage(socket, message) {
+  try {
+    // Store user message
+    chatHistory.push({ role: "user", text: message });
+    
+    // Get bot response using Gemini API
+    const reply = await getChatbotResponse(message);
+    
+    // Store bot response
+    chatHistory.push({ role: "bot", text: reply });
+    
+    // Send response only to the requesting client
+    socket.emit("receiveMessage", { text: reply, sender: "bot" });
+  } catch (error) {
+    console.error("Error fetching chatbot response:", error);
+    socket.emit("receiveMessage", { 
+      text: "Sorry, I couldn't process your message at this time.", 
+      sender: "bot" 
+    });
+  }
+}
         
         server.listen(PORT, HOST, () => {
             console.log(`App listening at http://${HOST}:${PORT}`);

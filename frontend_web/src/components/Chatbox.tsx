@@ -7,7 +7,7 @@ type Message = {
 };
 
 // Create socket connection outside component to prevent multiple connections
-const socket = io(`${import.meta.env.VITE_BASE_URL}`);
+const socket = io(`http://localhost:3000/`);
 
 export default function Chatbox() {
   const [messages, setMessages] = useState<Message[]>([]);

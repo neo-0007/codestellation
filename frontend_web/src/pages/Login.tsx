@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/auth/login`, {
+      const response = await fetch(`http://localhost:3000/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const Login = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full flex">
         <div className="w-1/2 flex justify-center items-center p-4">
-          <img src="/register.jpeg" alt="Login" className="w-80 h-80 rounded-lg" />
+          <img src="https://thumbs.dreamstime.com/b/cute-pink-brain-character-dumbbell-mental-health-concept-training-exercise-vector-illustration-flat-style-191722654.jpg" alt="Login" className="w-60 h-60 md:w-80 md:h-80 object-cover rounded-lg" />
         </div>
         <div className="w-1/2 p-4">
           <h1 className="text-2xl font-bold text-center mb-6">Welcome Back</h1>
