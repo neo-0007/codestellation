@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_client/providers/mood_provider.dart';
 import 'package:flutter_client/ui/pages/meditation_page.dart';
+import 'package:flutter_client/ui/pages/music_session_page.dart';
 import 'package:flutter_client/ui/pages/quotes_page.dart';
 import 'package:flutter_client/ui/pages/relax_page.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,16 @@ class ExplorePage extends StatelessWidget {
           },
         ),
       );
-    } 
+    }else if(items[index]["title"] == "Music Session"){
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return MusicRecommendationScreen(userMood: moodProvider.mood!,);
+          },
+        ),
+      );
+    }  
     
     else {
       ScaffoldMessenger.of(context).showSnackBar(
