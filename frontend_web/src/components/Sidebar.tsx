@@ -69,6 +69,14 @@ const Sidebar = ({ onSelectGroup }) => {
             </li>
           ))}
         </ul>
+        <div>
+          <p className="font-bold px-4 mt-6">AI suggested groups</p>
+          <ul className="mt-2">
+            <li className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer" >Dance Group</li>
+            <li className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer">High Hikers</li>
+            <li className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer">Party Nighters</li>
+          </ul>
+        </div>
       </aside>
       {/* Modal Component */}
       <GroupModal

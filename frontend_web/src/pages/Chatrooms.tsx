@@ -83,8 +83,7 @@ const Chatroom = () => {
     console.log('Sending message:', messageData);
     socket.emit("sendMessage", messageData);
     
-    // Update UI immediately
-    setMessages((prevMessages) => [...prevMessages, messageData]);
+    // Don't update UI immediately - let the socket event handle it
     setInput("");
   };
 
@@ -103,14 +102,17 @@ const Chatroom = () => {
               messages.map((msg, index) => (
                 <div
                   key={index}
-                  className={`p-2 my-1 rounded-md w-fit max-w-xs ${
+                  className={`p-2 my-1 rounded-md ${
                     msg.sender === username
-                      ? "bg-blue-500 text-white self-end"
-                      : "bg-gray-300 text-gray-800 self-start"
+                      ? "bg-blue-500 text-white self-end max-w-md"
+                      : "bg-gray-300 text-gray-800 self-start max-w-md"
                   }`}
                 >
                   <p className="text-sm font-bold">{msg.sender !== username ? msg.sender : "You"}</p>
                   <p>{msg.text}</p>
+                  <p className="text-xs opacity-70 mt-1">
+                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
                 </div>
               ))
             )}
@@ -118,7 +120,7 @@ const Chatroom = () => {
           <form onSubmit={sendMessage} className="mt-4 flex">
             <input
               type="text"
-              className="flex-1 p-2 border border-gray-300 rounded-l-lg focus:outline-none"
+              className="flex-1 p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
               placeholder={groupName ? "Type a message..." : "Select a group to start chatting"}
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -126,7 +128,7 @@ const Chatroom = () => {
             />
             <button
               type="submit"
-              disabled={!groupName}
+              disabled={!groupName || !input.trim()}
               className="bg-blue-500 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600 transition disabled:bg-blue-300"
             >
               Send
