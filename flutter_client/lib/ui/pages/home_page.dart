@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(Icons.menu, color: Colors.white),
         ),
         title: Text(
-          'XYZ',
+          'Harmoni',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
